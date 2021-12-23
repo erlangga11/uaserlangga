@@ -1,0 +1,39 @@
+version: '3.3'
+services:
+  php-apache-environment:
+    image: erlangganpa/quiz_erlangga:latest
+    container_name: php-apache
+    depends_on:
+      - db
+    volumes:
+      - ./:/var/www/html/
+    ports:
+      - 3306:80
+    networks:
+      - backend
+
+  db:
+    container_name: admin
+    image: mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: Masalembo123@
+      MYSQL_DATABASE: onlineshop
+    ports:
+      - "3306:3306"
+    volumes:
+      - db:/var/lib/mysql
+      - ./database/onlineshop.sql:/docker-entrypoint-initdb.d/onlineshop.sql
+    networks:
+      - backend
+
+volumes:
+  db:
+
+networks:
+  backend:   
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.0.0.141/24
+   
